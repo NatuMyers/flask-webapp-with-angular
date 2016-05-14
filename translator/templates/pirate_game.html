@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pirate Translation</title>
+    <link rel="stylesheet" href="../static/pirate_style.css">
+    <style>
+        body {
+            background-image: url("../static/background.jpg");
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="pageheaders">Convert English to Pirate-Talk:</h1>
+    <p class="text">These are the words that will be translated:</p>
+    <table class="text">
+    <tr>
+        <td>English</td>
+        <td>Pirate</td>
+    </tr>
+    <tr>
+        <td>---------</td>
+        <td>---------</td>
+    </tr>
+    <tr>
+        <td>sir</td>
+        <td>matey</td>
+    </tr>
+    <tr>
+        <td>hotel</td>
+        <td>fleabag inn</td>
+    </tr>
+    <tr>
+        <td>student</td>
+        <td>swabbie</td>
+    </tr>
+    <tr>
+        <td>boy</td>
+        <td>matey</td>
+    </tr>
+    </table>
+<!--     FIXME what's the faster way to create a table? -->
+    <p class="text">There are more, but it takes too long to manually input.</p>
+    <br>
+    <form action="/translate">
+        <label class="text">Input sentence for translating:<input class="text" type="text" name="input_sentence"></label>
+        <br>
+        <input type="submit" value="Pirate Me">
+</body>
+</html>
