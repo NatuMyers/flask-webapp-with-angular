@@ -10,6 +10,8 @@ app = Flask(__name__, static_url_path='')
 app.debug = True
 
 
+
+# THE ANGULAR APP (GOES TO STATIC FOLDER)
 # Routes
 @app.route('/')
 def root():
@@ -23,21 +25,18 @@ def static_proxy(path):
 
 
 
+# THE OTHER PYTHON APPS (DONE WITH BLUEPRINT)
+
 from deceptron.deceptron import deceptron
 app.register_blueprint(deceptron)
 app.register_blueprint(deceptron, url_prefix='/pages')
 
+from lotusApp.lotus import lotus
+app.register_blueprint(lotus)
+app.register_blueprint(lotus, url_prefix='/pages')
 
 
 
-
-
+# RUN EVERYTHING!!!
 if __name__ == '__main__':
   app.run()
-
-
-
-
-
-
-
