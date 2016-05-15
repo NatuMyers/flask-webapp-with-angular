@@ -33,7 +33,7 @@ app.register_blueprint(deceptron, url_prefix='/pages')
 
 from lotusApp.lotus import lotus
 app.register_blueprint(lotus)
-app.register_blueprint(lotus, url_prefix='/pages')
+app.register_blueprint(lotus, url_prefix='/lotusApp/assets')
 
 
 
