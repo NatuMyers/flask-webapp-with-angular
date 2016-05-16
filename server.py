@@ -5,11 +5,13 @@
 
 from flask import Flask, request, redirect, url_for, send_from_directory
 
+
+# THIS IS THE ONLY PY CODE FOR THE HOME------
+
 # Setup Flask app.
 app = Flask(__name__, static_url_path='')
+# app = Flask(__name__, static_url_path='') # if assets in in static root, no quotes like this
 app.debug = True
-
-
 
 # THE ANGULAR APP (GOES TO STATIC FOLDER)
 # Routes
@@ -23,13 +25,24 @@ def static_proxy(path):
   return app.send_static_file(path)
 
 
+# THE OTHER PYTHON APPS (DONE WITH BLUEPRINT)--------
 
 
-# THE OTHER PYTHON APPS (DONE WITH BLUEPRINT)
 
-from deceptron.deceptron import deceptron
+from deceptronApp.deceptron import deceptron
 app.register_blueprint(deceptron)
 app.register_blueprint(deceptron, url_prefix='/pages')
+
+
+
+from icApp.ic import ic
+app.register_blueprint(ic)
+app.register_blueprint(ic, url_prefix='/pages')
+
+
+from testApp.test import test
+app.register_blueprint(test)
+app.register_blueprint(test, url_prefix='/pages')
 
 from lotusApp.lotus import lotus
 app.register_blueprint(lotus)

@@ -28,7 +28,7 @@ def index():
     
 
 
-@lotus.route('/lotus/api/predict')
+@lotus.route('/api/predict')
 def predict():
     def getter(label):
         return float(request.args.get(label, 0))
