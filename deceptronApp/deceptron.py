@@ -1,46 +1,50 @@
-from flask import Flask, render_template, request
-from flask import Blueprint,  abort
-import string
+import os
+from sklearn import datasets
+from sklearn.ensemble import RandomForestClassifier
+from flask import Flask, make_response, jsonify, request
 
-deceptron = Blueprint('deceptron', __name__, template_folder='templates')
+from flask import  Blueprint, abort
+from jinja2 import TemplateNotFound
+
+DIR = os.path.dirname(os.path.abspath(__file__))
+
+deceptron = Blueprint('deceptron', __name__)
+# 2nd deceptron = Blueprint('deceptron', __name__, static_folder='deceptronApp/assets')
+##no deceptron._static_folder = '/deceptron/static' 
+
+def get_model():
+    iris = datasets.load_iris()
+    model = RandomForestClassifier(n_estimators=1000).fit(iris.data, iris.target)
+    labels = list(iris.target_names)
+    return model, labels
+
+
+MODEL, LABELS = get_model()
+ 
 
 @deceptron.route('/deceptron')
-def start_here():
-	return render_template("pirate_greet.html")
+def index():
+    return make_response(open(os.path.join(DIR, 'index.html')).read())
+    
 
-@deceptron.route('/deceptron/play')
-def game():
-	return render_template("pirate_game.html")
 
-@deceptron.route('/deceptron/translate')
-def translate():
-	# takes input from pirate_game.html page (inputted on /play)
-	input_sentence = request.args.get("input_sentence")
-	print input_sentence
+@deceptron.route('/api/predict')
+def predict():
+    def getter(label):
+        return float(request.args.get(label, 0))
+    try:
+        features = map(getter, ['sepalLength', 'sepalWidth', 'petalLength', 'petalWidth'])
+        probs = MODEL.predict_proba(features)[0]
+    except ValueError:
+        probs = (1. / len(LABELS) for _ in LABELS)
 
-	pirate_dict = {"sir": "matey", "hotel" : "fleabag inn", "student" : "swabbie", "boy" : "matey", "madam" : "proud beauty", "professor": "foul blaggart", "restaurant" : "galley", "your" : "yer", "excuse" : "arr", "students" : "swabbies", "are" : "be", "lawyer" : "foul blaggart", "the" : "th'", "restroom" : "head", "my" : "me", "hello": "avast", "is" : "be", "man" : "matey"}
+    val = {"data": [{"label": label, "prob": prob} for label, prob in zip(LABELS, probs)]}
+    return jsonify(val)
 
-	#FIXME, can currently only accept words with spaces
-	split_sentence = input_sentence.split()
 
-	result_list = []
-	for word in split_sentence:
-		if word in pirate_dict:
-			value = pirate_dict[word]
-			result_list.deceptronend(value)
-		else:
-			result_list.deceptronend(word)
-	
-	result_sentence = string.join(result_list)
 
-	return render_template("pirate_translate.html", input_sentence=input_sentence, result_sentence= result_sentence)
 
-@deceptron.route('/deceptron/playagain')
-def game_again():
-	response = request.args.get("game")
 
-	if response == "yes":
-		return render_template("pirate_game.html")
-	if response == "no":
-		return render_template("pirate_bye.html")
+
+
 
