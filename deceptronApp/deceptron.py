@@ -34,11 +34,11 @@ def predict():
         return float(request.args.get(label, 0))
     try:
         features = map(getter, ['sepalLength', 'sepalWidth', 'petalLength', 'petalWidth'])
-        probs = MODEL.predict_proba(features)[0]
+        deceptionScore = MODEL.predict_proba(features)[0]
     except ValueError:
-        probs = (1. / len(LABELS) for _ in LABELS)
+        deceptionScore = (1. / len(LABELS) for _ in LABELS)
 
-    val = {"data": [{"label": label, "prob": prob} for label, prob in zip(LABELS, probs)]}
+    val = {"data": [{"label": label, "prob": prob} for label, prob in zip(LABELS, deceptionScore)]}
     return jsonify(val)
 
 

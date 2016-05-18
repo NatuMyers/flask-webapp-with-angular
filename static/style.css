@@ -20,6 +20,10 @@
 
 @font-face { font-family: Quick; src: url('../font/Quicksand-Light.otf');}
 
+
+
+
+
  h6 {
         font-family: Azedo;
         font-size: 150%;
@@ -49,6 +53,8 @@
         font-family: Quick;
         font-size: 500%;
      }
+
+
 
 
     .bg-video {
