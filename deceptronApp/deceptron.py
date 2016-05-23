@@ -1,50 +1,29 @@
+# -*- coding: utf-8 -*-
 import os
-from sklearn import datasets
-from sklearn.ensemble import RandomForestClassifier
-from flask import Flask, make_response, jsonify, request
-
-from flask import  Blueprint, abort
-from jinja2 import TemplateNotFound
-
 DIR = os.path.dirname(os.path.abspath(__file__))
 
-deceptron = Blueprint('deceptron', __name__)
-# 2nd deceptron = Blueprint('deceptron', __name__, static_folder='deceptronApp/assets')
-##no deceptron._static_folder = '/deceptron/static' 
-
-def get_model():
-    iris = datasets.load_iris()
-    model = RandomForestClassifier(n_estimators=1000).fit(iris.data, iris.target)
-    labels = list(iris.target_names)
-    return model, labels
+from flask import Flask
+from flask import request
+from flask import render_template
+from flask import jsonify
+from lib.translate import translate
 
 
-MODEL, LABELS = get_model()
- 
 
-@deceptron.route('/deceptron')
+from flask import  Blueprint, abort, make_response
+from jinja2 import TemplateNotFound
+deceptron = Blueprint('deceptron',__name__)
+
+
+@deceptron.route('/deceptron', methods=['GET', 'POST'])
 def index():
-    return make_response(open(os.path.join(DIR, 'index.html')).read())
-    
-
-
-@deceptron.route('/api/predict')
-def predict():
-    def getter(label):
-        return float(request.args.get(label, 0))
-    try:
-        features = map(getter, ['sepalLength', 'sepalWidth', 'petalLength', 'petalWidth'])
-        deceptionScore = MODEL.predict_proba(features)[0]
-    except ValueError:
-        deceptionScore = (1. / len(LABELS) for _ in LABELS)
-
-    val = {"data": [{"label": label, "prob": prob} for label, prob in zip(LABELS, deceptionScore)]}
-    return jsonify(val)
-
-
-
-
-
+    if request.method == 'POST':
+        data = request.get_json()
+        text = data[u'text']
+        result = translate(text)
+        return result
+    else:
+        return make_response(open(os.path.join(DIR, 'deceptron.html')).read())
 
 
 

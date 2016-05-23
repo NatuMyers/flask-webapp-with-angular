@@ -1,0 +1,1 @@
+web: gunicorn switch_translate:app --log-file=-
